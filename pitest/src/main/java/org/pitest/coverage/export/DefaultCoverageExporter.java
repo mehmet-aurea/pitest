@@ -49,6 +49,7 @@ public class DefaultCoverageExporter implements CoverageExporter {
         "<block classname='" + l.getClassName().asJavaName() + "'"
             + " method='"
             + StringUtil.escapeBasicHtmlChars(l.getMethodName().name())
+                        + "' line_number='" + each.lines
             + "' number='" + each.getBlock().getBlock() + "'>");
     write(out, "<tests>\n");
     final List<String> ts = new ArrayList<String>(each.getTests());
