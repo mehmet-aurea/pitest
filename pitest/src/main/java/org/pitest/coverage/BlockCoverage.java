@@ -6,6 +6,7 @@ public class BlockCoverage {
 
   private final BlockLocation      block;
   private final Collection<String> tests;
+  public Collection<Integer> lines;
 
   public BlockCoverage(final BlockLocation block, final Collection<String> tests) {
     this.block = block;

@@ -57,6 +57,16 @@ public class Pitest {
       final List<? extends TestUnit> testUnits) {
     for (final TestUnit unit : testUnits) {
       final List<TestResult> results = container.execute(unit);
+        for(TestResult testResult : results) {
+            if(testResult != null) {
+                if(testResult.getThrowable() != null) {
+                    LOG.info("Throwable : " + Arrays.toString(testResult.getThrowable().getStackTrace()));
+                }
+                if(testResult.getDescription() != null) {
+                    LOG.info("Description : " + testResult.getDescription());
+                }
+            }
+        }
       processResults(results);
     }
   }
