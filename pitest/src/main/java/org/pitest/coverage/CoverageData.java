@@ -27,7 +27,14 @@ import org.pitest.testapi.Description;
 import org.pitest.util.Log;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.Set;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.TreeSet;
+import java.util.List;
+import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
@@ -69,7 +76,7 @@ public class CoverageData implements CoverageDatabase {
   }
 
     public boolean allTestsGreen() {
-        if(this.hasFailedTest) {
+        if (this.hasFailedTest) {
             LOG.info("Few tests failed without mutation when calculating line coverage");
             LOG.info("Continuing Report generation for rest of them");
         }
@@ -126,8 +133,8 @@ public class CoverageData implements CoverageDatabase {
 
     public List<BlockCoverage> createCoverage() {
         List<BlockCoverage> blockCoverages = FCollection.map(this.blockCoverage.entrySet(), toBlockCoverage());
-        for(BlockCoverage _blockCoverage : blockCoverages) {
-            _blockCoverage.lines = this.getLinesForBlock(_blockCoverage.getBlock());
+        for (BlockCoverage singleBlockCoverage : blockCoverages) {
+            singleBlockCoverage.lines = this.getLinesForBlock(singleBlockCoverage.getBlock());
         }
         return blockCoverages;
     }
