@@ -15,11 +15,6 @@
 
 package org.pitest.testapi.execute;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.logging.Logger;
-
 import org.pitest.functional.FCollection;
 import org.pitest.functional.SideEffect1;
 import org.pitest.testapi.Configuration;
@@ -28,6 +23,11 @@ import org.pitest.testapi.TestResult;
 import org.pitest.testapi.TestUnit;
 import org.pitest.util.Log;
 import org.pitest.util.PitError;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class Pitest {
 
@@ -57,6 +57,16 @@ public class Pitest {
       final List<? extends TestUnit> testUnits) {
     for (final TestUnit unit : testUnits) {
       final List<TestResult> results = container.execute(unit);
+        for (TestResult testResult : results) {
+            if (testResult != null) {
+                if (testResult.getThrowable() != null) {
+                    LOG.info("Throwable : " + Arrays.toString(testResult.getThrowable().getStackTrace()));
+                }
+                if (testResult.getDescription() != null) {
+                    LOG.info("Description : " + testResult.getDescription());
+                }
+            }
+        }
       processResults(results);
     }
   }

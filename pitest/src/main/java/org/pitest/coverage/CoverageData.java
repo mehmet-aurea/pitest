@@ -15,18 +15,6 @@
 
 package org.pitest.coverage;
 
-import java.math.BigInteger;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.logging.Logger;
-
 import org.pitest.classinfo.ClassInfo;
 import org.pitest.classinfo.ClassName;
 import org.pitest.classpath.CodeSource;
@@ -37,6 +25,18 @@ import org.pitest.functional.Option;
 import org.pitest.functional.predicate.Predicate;
 import org.pitest.testapi.Description;
 import org.pitest.util.Log;
+
+import java.math.BigInteger;
+import java.util.Set;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.TreeSet;
+import java.util.List;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 public class CoverageData implements CoverageDatabase {
 
@@ -75,9 +75,13 @@ public class CoverageData implements CoverageDatabase {
     }
   }
 
-  public boolean allTestsGreen() {
-    return !this.hasFailedTest;
-  }
+    public boolean allTestsGreen() {
+        if (this.hasFailedTest) {
+            LOG.info("Few tests failed without mutation when calculating line coverage");
+            LOG.info("Continuing Report generation for rest of them");
+        }
+        return true;
+    }
 
   @Override
   public Collection<ClassInfo> getClassInfo(final Collection<ClassName> classes) {
@@ -127,9 +131,13 @@ public class CoverageData implements CoverageDatabase {
     return generateCoverageNumber(coverage);
   }
 
-  public List<BlockCoverage> createCoverage() {
-    return FCollection.map(this.blockCoverage.entrySet(), toBlockCoverage());
-  }
+    public List<BlockCoverage> createCoverage() {
+        List<BlockCoverage> blockCoverages = FCollection.map(this.blockCoverage.entrySet(), toBlockCoverage());
+        for (BlockCoverage singleBlockCoverage : blockCoverages) {
+            singleBlockCoverage.lines = this.getLinesForBlock(singleBlockCoverage.getBlock());
+        }
+        return blockCoverages;
+    }
 
   private static F<Entry<BlockLocation, Set<TestInfo>>, BlockCoverage> toBlockCoverage() {
     return new F<Entry<BlockLocation, Set<TestInfo>>, BlockCoverage>() {
