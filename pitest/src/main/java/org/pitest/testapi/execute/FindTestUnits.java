@@ -1,13 +1,11 @@
 package org.pitest.testapi.execute;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.pitest.testapi.Configuration;
 import org.pitest.testapi.TestUnit;
+import org.pitest.util.Log;
+
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Scans classes to discover TestUnits
@@ -16,6 +14,7 @@ import org.pitest.testapi.TestUnit;
 public class FindTestUnits {
 
   private final Configuration config;
+    private static final Logger LOG = Log.getLogger();
 
   public FindTestUnits(final Configuration config) {
     this.config = config;
@@ -26,8 +25,13 @@ public class FindTestUnits {
     final List<TestUnit> testUnits = new ArrayList<TestUnit>();
 
     for (final Class<?> c : classes) {
-      final Collection<TestUnit> testUnitsFromClass = getTestUnits(c);
-      testUnits.addAll(testUnitsFromClass);
+        try {
+            LOG.info("Finding Test Units for class : " + c.getCanonicalName());
+            final Collection<TestUnit> testUnitsFromClass = getTestUnits(c);
+            testUnits.addAll(testUnitsFromClass);
+        } catch (Exception ex) {
+            LOG.info("Caught Exception while finding Test Units for Class" + ex);
+        }
     }
 
     return testUnits;

@@ -14,17 +14,6 @@
  */
 package org.pitest.coverage.execute;
 
-import static org.pitest.util.Unchecked.translateCheckedException;
-
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.pitest.boot.HotSwapAgent;
 import org.pitest.classinfo.ClassName;
 import org.pitest.classpath.ClassPathByteArraySource;
@@ -38,8 +27,18 @@ import org.pitest.testapi.execute.FindTestUnits;
 import org.pitest.util.ExitCode;
 import org.pitest.util.Log;
 import org.pitest.util.SafeDataInputStream;
-
 import sun.pitest.CodeCoverageStore;
+
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static org.pitest.util.Unchecked.translateCheckedException;
 
 public class CoverageMinion {
 
@@ -126,6 +125,7 @@ public class CoverageMinion {
     Collections.sort(classes); // ensure classes loaded in a consistent order
 
     final List<TestUnit> tus = discoverTests(paramsFromParent, classes);
+      LOG.info("Tests are discovered : " + tus.size());
 
     final DependencyFilter filter = new DependencyFilter(
         new DependencyExtractor(new ClassPathByteArraySource(),
@@ -159,7 +159,7 @@ public class CoverageMinion {
     for (int i = 0; i != count; i++) {
       classes.add(new ClassName(dis.readString()));
     }
-    LOG.fine("Tests classes received");
+    LOG.fine("Tests classes received " + classes.size());
 
     return classes;
   }
